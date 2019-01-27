@@ -37,11 +37,11 @@ async function main() {
     throw new Error(`Invalid GITHUB_EVENT_PATH contents: ${eventDataStr}`);
   }
 
+  debug("Event payload:", eventDataStr);
+
   if (!actions.includes(eventData.action)) {
     return;
   }
-
-  debug("Event payload:", eventDataStr);
 
   const pullRequestId = {
     owner: eventData.pull_request.head.repo.owner.login,
