@@ -15,7 +15,7 @@ const sizes = {
   1000: "XXL"
 };
 
-const actions = ["opened", "synchronized"];
+const actions = ["opened", "synchronize"];
 
 async function main() {
   debug("Running size-label-action...");
