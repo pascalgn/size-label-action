@@ -41,13 +41,13 @@ async function main() {
     return;
   }
 
+  debug("Event payload:", eventDataStr);
+
   const pullRequestId = {
     owner: eventData.pull_request.head.repo.owner.login,
     repo: eventData.pull_request.head.repo.name,
     number: eventData.pull_request.number
   };
-
-  debug("PR:", pullRequestId);
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`
@@ -61,8 +61,9 @@ async function main() {
   });
 
   const changedLines = getChangedLines(pullRequestDiff.data);
-  const sizeLabel = getSizeLabel(changedLines);
+  debug("Changed lines:", changedLines);
 
+  const sizeLabel = getSizeLabel(changedLines);
   debug("Matching label:", sizeLabel);
 
   const { add, remove } = getLabelChanges(
@@ -134,7 +135,11 @@ function getLabelChanges(newLabel, existingLabels) {
   return { add, remove };
 }
 
-main().catch(e => {
-  process.exitCode = 1;
-  console.error(e);
-});
+if (require.main === module) {
+  main().catch(e => {
+    process.exitCode = 1;
+    console.error(e);
+  });
+}
+
+module.exports = { main };

@@ -1,0 +1,57 @@
+const fs = require("fs");
+const process = require("process");
+
+require("dotenv").load();
+
+const tmp = require("tmp");
+tmp.setGracefulCleanup();
+
+const index = require("./index");
+
+async function main() {
+  const eventPayloadPath = await tmpFile(
+    JSON.stringify({
+      action: "synchronized",
+      pull_request: {
+        number: process.env.PR_NUMBER,
+        labels: [],
+        head: {
+          repo: {
+            name: process.env.PR_NAME,
+            owner: {
+              login: process.env.PR_OWNER
+            }
+          }
+        }
+      }
+    })
+  );
+
+  process.env.DEBUG_ACTION = "1";
+  process.env.GITHUB_EVENT_PATH = eventPayloadPath;
+
+  await index.main();
+}
+
+function tmpFile(content) {
+  return new Promise((resolve, reject) => {
+    tmp.file({ postfix: ".json" }, (err, path) => {
+      if (err) {
+        reject(err);
+      } else {
+        fs.writeFile(path, content, err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(path);
+          }
+        });
+      }
+    });
+  });
+}
+
+main().catch(e => {
+  process.exitCode = 1;
+  console.error(e);
+});

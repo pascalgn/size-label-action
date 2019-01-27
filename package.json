@@ -9,8 +9,15 @@
   "bin": {
     "size-label-action": "index.js"
   },
+  "scripts": {
+    "test": "node test.js"
+  },
   "dependencies": {
     "@octokit/rest": "^16.13.1",
     "diff": "^4.0.1"
+  },
+  "devDependencies": {
+    "dotenv": "^6.2.0",
+    "tmp": "^0.0.33"
   }
 }
