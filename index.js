@@ -40,6 +40,7 @@ async function main() {
   debug("Event payload:", eventDataStr);
 
   if (!actions.includes(eventData.action)) {
+    console.log("Action will be ignored:", eventData.action);
     return;
   }
 
