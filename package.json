@@ -1,0 +1,16 @@
+{
+  "name": "size-label-action",
+  "version": "0.0.1",
+  "description": "GitHub action to assign labels based on pull request change sizes",
+  "main": "index.js",
+  "author": "Pascal",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "size-label-action": "index.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.13.1",
+    "diff": "^4.0.1"
+  }
+}
