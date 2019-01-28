@@ -11,7 +11,7 @@ const index = require("./index");
 async function main() {
   const eventPayloadPath = await tmpFile(
     JSON.stringify({
-      action: "synchronized",
+      action: "synchronize",
       pull_request: {
         number: process.env.PR_NUMBER,
         labels: [],

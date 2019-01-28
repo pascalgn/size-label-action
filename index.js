@@ -62,10 +62,10 @@ async function main() {
   });
 
   const changedLines = getChangedLines(pullRequestDiff.data);
-  debug("Changed lines:", changedLines);
+  console.log("Changed lines:", changedLines);
 
   const sizeLabel = getSizeLabel(changedLines);
-  debug("Matching label:", sizeLabel);
+  console.log("Matching label:", sizeLabel);
 
   const { add, remove } = getLabelChanges(
     sizeLabel,
@@ -112,8 +112,8 @@ function getChangedLines(diff) {
 
 function getSizeLabel(changedLines) {
   let label = null;
-  for (const lines of Object.keys(sizes).sort()) {
-    if (changedLines > lines) {
+  for (const lines of Object.keys(sizes).sort((a, b) => a - b)) {
+    if (changedLines >= lines) {
       label = `size/${sizes[lines]}`;
     }
   }
