@@ -1,5 +1,7 @@
 # size-label-action
 
+[![GitHubActions](https://img.shields.io/badge/listed%20on-GitHubActions-blue.svg)](https://github-actions.netlify.com/aws-sam)
+
 GitHub action to assign labels based on pull request change sizes.
 
 Labels are taken from https://github.com/kubernetes/kubernetes/labels?q=size
