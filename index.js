@@ -41,7 +41,7 @@ async function main() {
 
   if (!actions.includes(eventData.action)) {
     console.log("Action will be ignored:", eventData.action);
-    return;
+    return false;
   }
 
   const pullRequestId = {
@@ -72,6 +72,11 @@ async function main() {
     eventData.pull_request.labels
   );
 
+  if (add.length === 0 && remove.length === 0) {
+    console.log("Correct label already assigned");
+    return false;
+  }
+
   if (add.length > 0) {
     debug("Adding labels:", add);
     await octokit.issues.addLabels({ ...pullRequestId, labels: add });
@@ -83,6 +88,8 @@ async function main() {
   }
 
   debug("Success!");
+
+  return true;
 }
 
 function debug(...str) {
@@ -137,10 +144,13 @@ function getLabelChanges(newLabel, existingLabels) {
 }
 
 if (require.main === module) {
-  main().catch(e => {
-    process.exitCode = 1;
-    console.error(e);
-  });
+  main().then(
+    success => (process.exitCode = success ? 0 : 78),
+    e => {
+      process.exitCode = 1;
+      console.error(e);
+    }
+  );
 }
 
 module.exports = { main };
