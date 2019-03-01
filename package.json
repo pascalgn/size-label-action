@@ -10,14 +10,17 @@
     "size-label-action": "index.js"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@octokit/rest": "^16.13.1",
-    "diff": "^4.0.1"
+    "diff": "^4.0.1",
+    "globrex": "^0.1.2"
   },
   "devDependencies": {
     "dotenv": "^6.2.0",
+    "eslint": "^5.14.1",
     "tmp": "^0.0.33"
   }
 }

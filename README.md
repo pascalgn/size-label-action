@@ -20,6 +20,27 @@ action "assign size labels" {
 }
 ```
 
+## Configuration
+
+The following environment variables are supported:
+
+- `IGNORED`: A list of [glob expressions](http://man7.org/linux/man-pages/man7/glob.7.html)
+  separated by newlines. Files matching these expressions will not count when
+  calculating the change size of the pull request. Lines starting with `#` are
+  ignored and files matching lines starting with `!` are always included.
+
+You can configure the environment variables in the workflow file like this:
+
+```
+action "assign size labels" {
+  uses = ...
+  secrets = ["GITHUB_TOKEN"]
+  env = {
+    IGNORED = ".*\n!.gitignore\nyarn.lock\ngenerated/**"
+  }
+}
+```
+
 ## License
 
 MIT

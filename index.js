@@ -4,6 +4,7 @@ const fs = require("fs");
 const process = require("process");
 
 const Octokit = require("@octokit/rest");
+const globrex = require("globrex");
 const Diff = require("diff");
 
 const sizes = {
@@ -16,6 +17,8 @@ const sizes = {
 };
 
 const actions = ["opened", "synchronize"];
+
+const globrexOptions = { extended: true, globstar: true };
 
 async function main() {
   debug("Running size-label-action...");
@@ -44,6 +47,8 @@ async function main() {
     return false;
   }
 
+  const isIgnored = parseIgnored(process.env.IGNORED);
+
   const pullRequestId = {
     owner: eventData.pull_request.head.repo.owner.login,
     repo: eventData.pull_request.head.repo.name,
@@ -51,7 +56,8 @@ async function main() {
   };
 
   const octokit = new Octokit({
-    auth: `token ${GITHUB_TOKEN}`
+    auth: `token ${GITHUB_TOKEN}`,
+    userAgent: "pascalgn/size-label-action"
   });
 
   const pullRequestDiff = await octokit.pulls.get({
@@ -61,7 +67,7 @@ async function main() {
     }
   });
 
-  const changedLines = getChangedLines(pullRequestDiff.data);
+  const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
   console.log("Changed lines:", changedLines);
 
   const sizeLabel = getSizeLabel(changedLines);
@@ -98,6 +104,36 @@ function debug(...str) {
   }
 }
 
+function parseIgnored(str = "") {
+  const ignored = str
+    .split(/\r|\n/)
+    .map(s => s.trim())
+    .filter(s => s.length > 0 && !s.startsWith("#"))
+    .map(s =>
+      s.length > 1 && s[0] === "!"
+        ? { not: globrex(s.substr(1), globrexOptions) }
+        : globrex(s, globrexOptions)
+    );
+  function isIgnored(path) {
+    if (path === "/dev/null") {
+      return true;
+    }
+    const pathname = path.substr(2);
+    let ignore = false;
+    for (const entry of ignored) {
+      if (entry.not) {
+        if (pathname.match(entry.not.regex)) {
+          return false;
+        }
+      } else if (!ignore && pathname.match(entry.regex)) {
+        ignore = true;
+      }
+    }
+    return ignore;
+  }
+  return isIgnored;
+}
+
 async function readFile(path) {
   return new Promise((resolve, reject) => {
     fs.readFile(path, { encoding: "utf8" }, (err, data) => {
@@ -110,9 +146,13 @@ async function readFile(path) {
   });
 }
 
-function getChangedLines(diff) {
+function getChangedLines(isIgnored, diff) {
   return Diff.parsePatch(diff)
-    .flatMap(file => file.hunks)
+    .flatMap(file =>
+      isIgnored(file.oldFileName) && isIgnored(file.newFileName)
+        ? []
+        : file.hunks
+    )
     .flatMap(hunk => hunk.lines)
     .filter(line => line[0] === "+" || line[0] === "-").length;
 }
