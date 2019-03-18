@@ -115,7 +115,7 @@ function parseIgnored(str = "") {
         : globrex(s, globrexOptions)
     );
   function isIgnored(path) {
-    if (path === "/dev/null") {
+    if (path == null || path === "/dev/null") {
       return true;
     }
     const pathname = path.substr(2);
