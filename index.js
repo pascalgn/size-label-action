@@ -49,11 +49,12 @@ async function main() {
 
   const isIgnored = parseIgnored(process.env.IGNORED);
 
-  const pullRequestId = {
+  const pullRequestHome = {
     owner: eventData.pull_request.head.repo.owner.login,
-    repo: eventData.pull_request.head.repo.name,
-    number: eventData.pull_request.number
+    repo: eventData.pull_request.head.repo.name
   };
+
+  const pull_number = eventData.pull_request.number;
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
@@ -61,7 +62,8 @@ async function main() {
   });
 
   const pullRequestDiff = await octokit.pulls.get({
-    ...pullRequestId,
+    ...pullRequestHome,
+    pull_number,
     headers: {
       accept: "application/vnd.github.v3.diff"
     }
@@ -85,12 +87,20 @@ async function main() {
 
   if (add.length > 0) {
     debug("Adding labels:", add);
-    await octokit.issues.addLabels({ ...pullRequestId, labels: add });
+    await octokit.issues.addLabels({
+      ...pullRequestHome,
+      issue_number: pull_number,
+      labels: add
+    });
   }
 
   for (const label of remove) {
     debug("Removing label:", label);
-    await octokit.issues.removeLabel({ ...pullRequestId, name: label });
+    await octokit.issues.removeLabel({
+      ...pullRequestHome,
+      issue_number: pull_number,
+      name: label
+    });
   }
 
   debug("Success!");

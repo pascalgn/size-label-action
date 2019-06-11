@@ -1,7 +1,7 @@
 const fs = require("fs");
 const process = require("process");
 
-require("dotenv").load();
+require("dotenv").config();
 
 const tmp = require("tmp");
 tmp.setGracefulCleanup();
