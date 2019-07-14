@@ -11,6 +11,7 @@
   "rules": {
     "semi": "error",
     "no-tabs": "error",
-    "no-console": "off"
+    "no-console": "off",
+    "require-atomic-updates": "off"
   }
 }
