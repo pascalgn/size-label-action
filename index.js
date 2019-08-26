@@ -195,7 +195,7 @@ function getLabelChanges(newLabel, existingLabels) {
 
 if (require.main === module) {
   main().then(
-    success => (process.exitCode = success ? 0 : 78),
+    () => (process.exitCode = 0),
     e => {
       process.exitCode = 1;
       console.error(e);
