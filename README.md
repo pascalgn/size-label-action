@@ -15,7 +15,7 @@ workflow "on pull request changes, assign size labels" {
 }
 
 action "assign size labels" {
-  uses = "pascalgn/size-label-action@397e38b11f1a8d4988db00d37b93ed1df6f05f41"
+  uses = "pascalgn/size-label-action@c2d2180e948c522584a969d2657fc4ab1d01d1aa"
   secrets = ["GITHUB_TOKEN"]
 }
 ```
