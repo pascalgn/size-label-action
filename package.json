@@ -14,13 +14,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@octokit/rest": "^16.28.4",
+    "@octokit/rest": "^16.28.7",
     "diff": "^4.0.1",
     "globrex": "^0.1.2"
   },
   "devDependencies": {
-    "dotenv": "^8.0.0",
-    "eslint": "^6.0.1",
+    "dotenv": "^8.1.0",
+    "eslint": "^6.2.2",
     "tmp": "^0.1.0"
   }
 }
