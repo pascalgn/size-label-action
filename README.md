@@ -6,18 +6,19 @@ Labels are taken from https://github.com/kubernetes/kubernetes/labels?q=size
 
 ## Usage
 
-Add this to your `.github/main.workflow` file:
+Create a `.github/workflows/size-label.yml` file:
 
 ```
-workflow "on pull request changes, assign size labels" {
-  on = "pull_request"
-  resolves = ["assign size labels"]
-}
-
-action "assign size labels" {
-  uses = "pascalgn/size-label-action@c2d2180e948c522584a969d2657fc4ab1d01d1aa"
-  secrets = ["GITHUB_TOKEN"]
-}
+name: size-label
+on: pull_request
+jobs:
+  size-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: size-label
+        uses: "pascalgn/size-label-action@c2d2180e948c522584a969d2657fc4ab1d01d1aa"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 ```
 
 ## Configuration
@@ -32,13 +33,9 @@ The following environment variables are supported:
 You can configure the environment variables in the workflow file like this:
 
 ```
-action "assign size labels" {
-  uses = ...
-  secrets = ["GITHUB_TOKEN"]
-  env = {
-    IGNORED = ".*\n!.gitignore\nyarn.lock\ngenerated/**"
-  }
-}
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          IGNORED = ".*\n!.gitignore\nyarn.lock\ngenerated/**"
 ```
 
 ## License
