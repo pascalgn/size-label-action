@@ -8,7 +8,7 @@ Labels are taken from https://github.com/kubernetes/kubernetes/labels?q=size
 
 Create a `.github/workflows/size-label.yml` file:
 
-```
+```yaml
 name: size-label
 on: pull_request
 jobs:
@@ -32,10 +32,10 @@ The following environment variables are supported:
 
 You can configure the environment variables in the workflow file like this:
 
-```
+```yaml
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          IGNORED = ".*\n!.gitignore\nyarn.lock\ngenerated/**"
+          IGNORED: ".*\n!.gitignore\nyarn.lock\ngenerated/**"
 ```
 
 ## License
