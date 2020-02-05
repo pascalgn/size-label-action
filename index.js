@@ -3,7 +3,7 @@
 const fs = require("fs");
 const process = require("process");
 
-const Octokit = require("@octokit/rest");
+const { Octokit } = require("@octokit/rest");
 const globrex = require("globrex");
 const Diff = require("diff");
 
