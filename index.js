@@ -36,7 +36,7 @@ async function main() {
   const eventDataStr = await readFile(GITHUB_EVENT_PATH);
   const eventData = JSON.parse(eventDataStr);
 
-  if (!eventData || !eventData.pull_request || !eventData.pull_request.head) {
+  if (!eventData || !eventData.pull_request || !eventData.pull_request.base) {
     throw new Error(`Invalid GITHUB_EVENT_PATH contents: ${eventDataStr}`);
   }
 
@@ -50,8 +50,8 @@ async function main() {
   const isIgnored = parseIgnored(process.env.IGNORED);
 
   const pullRequestHome = {
-    owner: eventData.pull_request.head.repo.owner.login,
-    repo: eventData.pull_request.head.repo.name
+    owner: eventData.pull_request.base.repo.owner.login,
+    repo: eventData.pull_request.base.repo.name
   };
 
   const pull_number = eventData.pull_request.number;
