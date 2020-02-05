@@ -15,7 +15,7 @@ async function main() {
       pull_request: {
         number: process.env.PR_NUMBER,
         labels: [],
-        head: {
+        base: {
           repo: {
             name: process.env.PR_NAME,
             owner: {
