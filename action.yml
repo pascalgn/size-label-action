@@ -1,0 +1,8 @@
+name: "Assign size label"
+description: "Assign labels based on pull request change sizes"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+branding:
+  icon: "tag"
+  color: "blue"
