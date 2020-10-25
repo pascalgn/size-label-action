@@ -23,7 +23,7 @@ jobs:
 
 ## Create the needed labels
 
-Export both `GITHUB_TOKEN` and `REPO` (e.g. `pascalgn/size-label-action`) and run the script bellow:
+Export both `GITHUB_TOKEN` and `REPO` (e.g. `my-username/my-repository`) and run the script below:
  
 ```bash
 for size in XL XXL XS S M L; do
