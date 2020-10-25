@@ -16,7 +16,7 @@ const sizes = {
   1000: "XXL"
 };
 
-const actions = ["opened", "synchronize"];
+const actions = ["opened", "synchronize", "reopened"];
 
 const globrexOptions = { extended: true, globstar: true };
 
