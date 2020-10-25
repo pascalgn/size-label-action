@@ -22,5 +22,9 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.12.0",
     "tmp": "^0.2.1"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "trailingComma": "none"
   }
 }
