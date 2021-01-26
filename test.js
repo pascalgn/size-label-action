@@ -6,7 +6,7 @@ require("dotenv").config();
 const tmp = require("tmp");
 tmp.setGracefulCleanup();
 
-const index = require("./index");
+const index = require("./dist/index");
 
 async function main() {
   const eventPayloadPath = await tmpFile(

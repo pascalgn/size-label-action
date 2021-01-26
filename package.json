@@ -10,7 +10,7 @@
     "size-label-action": "index.js"
   },
   "scripts": {
-    "test": "node test.js",
+    "test": "yarn compile && node test.js",
     "lint": "eslint .",
     "compile": "ncc build index.js --license LICENSE -o dist",
     "prepublish": "yarn compile"
