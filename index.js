@@ -127,7 +127,7 @@ function parseIgnored(str = "") {
         ? { not: globrex(s.substr(1), globrexOptions) }
         : globrex(s, globrexOptions)
     );
-  debug("Ignoring: " + JSON.stringify(ignored));
+  debug("Ignoring", JSON.stringify(ignored));
   function isIgnored(path) {
     if (path == null || path === "/dev/null") {
       return true;
