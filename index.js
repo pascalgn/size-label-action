@@ -8,12 +8,11 @@ const globrex = require("globrex");
 const Diff = require("diff");
 
 const sizes = {
-  0: "XS",
-  10: "S",
-  30: "M",
-  100: "L",
-  500: "XL",
-  1000: "XXL"
+  0: "xs",
+  100: "s",
+  200: "m",
+  500: "l",
+  501: "xl"
 };
 
 const actions = ["opened", "synchronize", "reopened"];
