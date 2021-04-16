@@ -24,7 +24,7 @@ jobs:
 ## Create the needed labels
 
 Export both `GITHUB_TOKEN` and `REPO` (e.g. `my-username/my-repository`) and run the script below:
- 
+
 ```bash
 for size in XL XXL XS S M L; do
 	curl -sf -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/kubernetes/kubernetes/labels/size/$size" |
@@ -45,9 +45,49 @@ The following environment variables are supported:
 You can configure the environment variables in the workflow file like this:
 
 ```yaml
+env:
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  IGNORED: ".*\n!.gitignore\nyarn.lock\ngenerated/**"
+```
+
+## Custom sizes
+
+The default sizes are:
+
+```js
+{
+  0: "XS",
+  10: "S",
+  30: "M",
+  100: "L",
+  500: "XL",
+  1000: "XXL"
+}
+```
+
+You can pass your own configuration by passing `sizes`
+
+```yaml
+name: size-label
+on: pull_request
+jobs:
+  size-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: size-label
+        uses: "pascalgn/size-label-action@v0.4.2"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          IGNORED: ".*\n!.gitignore\nyarn.lock\ngenerated/**"
+        with:
+          sizes: >
+            {
+              0: "XS",
+              20: "S",
+              50: "M",
+              200: "L",
+              800: "XL",
+              2000: "XXL"
+            }
 ```
 
 ## License
