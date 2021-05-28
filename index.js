@@ -199,12 +199,12 @@ function getLabelChanges(newLabel, existingLabels) {
 }
 
 function getSizesInput() {
-  let inputSizes = core.getInput("sizes");
-  if (inputSizes.length) {
+  let inputSizes = process.env.INPUT_SIZES;
+  if (inputSizes && inputSizes.length) {
     return JSON.parse(inputSizes);
+  } else {
+    return undefined;
   }
-  // else return undefined so default sizes can be applied
-  return;
 }
 
 if (require.main === module) {
