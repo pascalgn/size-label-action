@@ -1,5 +1,9 @@
 name: "Assign size label"
 description: "Assign labels based on pull request change sizes"
+inputs:
+  sizes:
+    description: "Custom size configuration"
+    required: false
 runs:
   using: "node12"
   main: "dist/index.js"

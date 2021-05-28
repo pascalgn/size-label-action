@@ -7,7 +7,7 @@ const { Octokit } = require("@octokit/rest");
 const globrex = require("globrex");
 const Diff = require("diff");
 
-const sizes = {
+const defaultSizes = {
   0: "XS",
   10: "S",
   30: "M",
@@ -72,7 +72,8 @@ async function main() {
   const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
   console.log("Changed lines:", changedLines);
 
-  const sizeLabel = getSizeLabel(changedLines);
+  const sizes = getSizesInput();
+  const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
 
   const { add, remove } = getLabelChanges(
@@ -171,7 +172,7 @@ function getChangedLines(isIgnored, diff) {
     .filter(line => line[0] === "+" || line[0] === "-").length;
 }
 
-function getSizeLabel(changedLines) {
+function getSizeLabel(changedLines, sizes = defaultSizes) {
   let label = null;
   for (const lines of Object.keys(sizes).sort((a, b) => a - b)) {
     if (changedLines >= lines) {
@@ -195,6 +196,15 @@ function getLabelChanges(newLabel, existingLabels) {
     }
   }
   return { add, remove };
+}
+
+function getSizesInput() {
+  let inputSizes = process.env.INPUT_SIZES;
+  if (inputSizes && inputSizes.length) {
+    return JSON.parse(inputSizes);
+  } else {
+    return undefined;
+  }
 }
 
 if (require.main === module) {
