@@ -45,9 +45,9 @@ The following environment variables are supported:
 You can configure the environment variables in the workflow file like this:
 
 ```yaml
-env:
-  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-  IGNORED: ".*\n!.gitignore\nyarn.lock\ngenerated/**"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          IGNORED: ".*\n!.gitignore\nyarn.lock\ngenerated/**"
 ```
 
 ## Custom sizes
