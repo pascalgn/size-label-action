@@ -27,9 +27,9 @@ Export both `GITHUB_TOKEN` and `REPO` (e.g. `my-username/my-repository`) and run
 
 ```bash
 for size in XL XXL XS S M L; do
-	curl -sf -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/kubernetes/kubernetes/labels/size/$size" |
-		jq '. | { "name": .name, "color": .color, "description": .description }' |
-		curl -sfXPOST -d @- -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$REPO/labels
+  curl -sf -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/kubernetes/kubernetes/labels/size/$size" |
+    jq '. | { "name": .name, "color": .color, "description": .description }' |
+    curl -sfXPOST -d @- -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$REPO/labels
 done
 ```
 
