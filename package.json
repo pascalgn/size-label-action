@@ -18,7 +18,8 @@
   "dependencies": {
     "@octokit/rest": "^18.5.5",
     "diff": "^5.0.0",
-    "globrex": "^0.1.2"
+    "globrex": "^0.1.2",
+    "https-proxy-agent": "^5.0.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.28.6",
