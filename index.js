@@ -76,9 +76,18 @@ async function main() {
   const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
 
+  const { data: pr } = await octokit.rest.pulls.get(
+    {
+      ...context.repo,
+      pull_number: num,
+    }
+  );
+
+  const {labels} = pr;
+
   const { add, remove } = getLabelChanges(
     sizeLabel,
-    eventData.pull_request.labels
+    labels
   );
 
   if (add.length === 0 && remove.length === 0) {
