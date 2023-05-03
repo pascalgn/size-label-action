@@ -16,14 +16,14 @@
     "prepublish": "yarn compile"
   },
   "dependencies": {
-    "@octokit/rest": "^18.5.5",
+    "@octokit/rest": "^19.0.7",
     "diff": "^5.0.0",
     "globrex": "^0.1.2"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.28.6",
+    "@vercel/ncc": "^0.36.1",
     "dotenv": "^10.0.0",
-    "eslint": "^7.27.0",
+    "eslint": "^8.39.0",
     "tmp": "^0.2.1"
   },
   "prettier": {
