@@ -29,6 +29,9 @@ const globrexOptions = { extended: true, globstar: true };
 async function main() {
   debug("Running size-label-action...");
 
+  // Set the GITHUB_BASE_URL constant value, using a default value of https://api.github.com if not provided
+  const GITHUB_BASE_URL = process.env.GITHUB_BASE_URL || "https://api.github.com";
+
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   if (!GITHUB_TOKEN) {
     throw new Error("Environment variable GITHUB_TOKEN not set!");
@@ -63,6 +66,7 @@ async function main() {
   const pull_number = eventData.pull_request.number;
 
   const octokit = new Octokit({
+    baseUrl: GITHUB_BASE_URL,
     auth: `token ${GITHUB_TOKEN}`,
     userAgent: "pascalgn/size-label-action"
   });
