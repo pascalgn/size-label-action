@@ -10,13 +10,16 @@ Create a `.github/workflows/size-label.yml` file:
 
 ```yaml
 name: size-label
-on: pull_request
+on: pull_request_target
 jobs:
   size-label:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: size-label
-        uses: "pascalgn/size-label-action@v0.4.3"
+        uses: "pascalgn/size-label-action@v0.5.0"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 ```
@@ -69,9 +72,12 @@ You can pass your own configuration by passing `sizes`
 
 ```yaml
 name: size-label
-on: pull_request
+on: pull_request_target
 jobs:
   size-label:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: size-label
