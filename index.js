@@ -58,6 +58,7 @@ async function main() {
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
+    baseUrl: process.env.GITHUB_API_URL || "https://api.github.com",
     userAgent: "pascalgn/size-label-action"
   });
 
