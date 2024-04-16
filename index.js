@@ -75,12 +75,11 @@ async function main() {
   const sizes = getSizesInput();
   const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
-  debug(`Writing label to ${process.env.GITHUB_OUTPUT}`);
-  try {
-    fs.writeFileSync(process.env.GITHUB_OUTPUT, `sizeLabel="${sizeLabel}"`);
-    debug("Writing finished");
-  } catch (err) {
-    console.error(`Couldn't write to GH Action output: ${err}`);
+
+  const githubOutput = process.env.GITHUB_OUTPUT;
+  if (githubOutput) {
+    fs.writeFileSync(githubOutput, `sizeLabel="${sizeLabel}"`);
+    debug(`Written label '${sizeLabel}' to ${githubOutput}`);
   }
 
   const { add, remove } = getLabelChanges(
