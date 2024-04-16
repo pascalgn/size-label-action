@@ -77,6 +77,12 @@ async function main() {
   const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
 
+  const githubOutput = process.env.GITHUB_OUTPUT;
+  if (githubOutput) {
+    fs.writeFileSync(githubOutput, `sizeLabel="${sizeLabel}"`);
+    debug(`Written label '${sizeLabel}' to ${githubOutput}`);
+  }
+
   const { add, remove } = getLabelChanges(
     sizeLabel,
     eventData.pull_request.labels

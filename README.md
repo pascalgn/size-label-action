@@ -96,6 +96,35 @@ jobs:
             }
 ```
 
+## Using with other actions
+
+If creating workflow with multiple jobs, they can react on the label set by this action:
+
+```yaml
+name: size-label
+on: pull_request_target
+jobs:
+  label:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.label.outputs.sizeLabel }}
+    steps:
+      - name: size-label
+        id: label
+        uses: "pascalgn/size-label-action@v0.5.0"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  comment:
+    runs-on: ubuntu-latest
+    needs: label
+    if: ${{ contains(needs.label.outputs.label, 'XL') }}
+    steps:
+      - run: echo "Too big PR"
+```
+
 ## License
 
 [MIT](LICENSE)
