@@ -25,6 +25,7 @@ jobs:
           channel-id: C0399MY1YKW # dev-pr channel
           payload: |
             {
+               "text": "${{ github.event.pull_request.title }}",
                "attachments": [
                     {
                         "mrkdwn_in": ["text"],
@@ -46,7 +47,7 @@ jobs:
                                 "short": true
                             }
                         ],
-                        "thumb_url": "https://manage.cove.is/imgs/favicon.png",
+                        "thumb_url": "https://manage.cove.is/imgs/favicon.png"
                     }
                   ]
             }
