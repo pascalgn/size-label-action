@@ -5,7 +5,6 @@ const process = require("process");
 
 const { Octokit } = require("@octokit/rest");
 const globrex = require("globrex");
-const Diff = require("diff");
 
 const defaultSizes = {
   0: "XS",
@@ -62,15 +61,15 @@ async function main() {
     userAgent: "pascalgn/size-label-action"
   });
 
-  const pullRequestDiff = await octokit.pulls.get({
+  const pullRequestFiles = await octokit.pulls.listFiles({
     ...pullRequestHome,
     pull_number,
     headers: {
-      accept: "application/vnd.github.v3.diff"
+      accept: "application/vnd.github.raw+json"
     }
   });
 
-  const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
+  const changedLines = getChangedLines(isIgnored, pullRequestFiles.data);
   console.log("Changed lines:", changedLines);
 
   const sizes = getSizesInput();
@@ -168,15 +167,14 @@ async function readFile(path) {
   });
 }
 
-function getChangedLines(isIgnored, diff) {
-  return Diff.parsePatch(diff)
-    .flatMap(file =>
-      isIgnored(file.oldFileName) && isIgnored(file.newFileName)
-        ? []
-        : file.hunks
+function getChangedLines(isIgnored, pullRequestFiles) {
+  return pullRequestFiles
+    .map(file =>
+      isIgnored(file.filename) && (!file.previous_filename || isIgnored(file.previous_filename))
+        ? 0
+        : file.changes
     )
-    .flatMap(hunk => hunk.lines)
-    .filter(line => line[0] === "+" || line[0] === "-").length;
+    .reduce((total, current) => total + current);
 }
 
 function getSizeLabel(changedLines, sizes = defaultSizes) {
