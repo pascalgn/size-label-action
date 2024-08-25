@@ -78,6 +78,10 @@ async function main() {
   const changedLines = getChangedLines(isIgnored, pullRequestFiles.data);
   console.log("Changed lines:", changedLines);
 
+  if (isNaN(changedLines)) {
+    throw new Error(`could not get changed lines: '${changedLines}'`);
+  }
+
   const sizes = getSizesInput();
   const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
@@ -138,14 +142,14 @@ function parseIgnored(str = "") {
     .filter(s => s.length > 0 && !s.startsWith("#"))
     .map(s =>
       s.length > 1 && s[0] === "!"
-        ? { not: globrex(s.substr(1), globrexOptions) }
+        ? { not: globrex(s.slice(1), globrexOptions) }
         : globrex(s, globrexOptions)
     );
   function isIgnored(path) {
     if (path == null || path === "/dev/null") {
       return true;
     }
-    const pathname = path.substr(2);
+    const pathname = path.slice(2);
     let ignore = false;
     for (const entry of ignored) {
       if (entry.not) {
