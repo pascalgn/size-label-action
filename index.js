@@ -6,6 +6,8 @@ const process = require("process");
 const { Octokit } = require("@octokit/rest");
 const globrex = require("globrex");
 
+const HttpsProxyAgent = require("https-proxy-agent");
+
 const defaultSizes = {
   0: "XS",
   10: "S",
@@ -55,10 +57,13 @@ async function main() {
 
   const pull_number = eventData.pull_request.number;
 
+  const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy;
+
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
     baseUrl: process.env.GITHUB_API_URL || "https://api.github.com",
-    userAgent: "pascalgn/size-label-action"
+    userAgent: "pascalgn/size-label-action",
+    ...(proxyUrl && { request: { agent: new HttpsProxyAgent(proxyUrl) } })
   });
 
   const pullRequestFiles = await octokit.pulls.listFiles({
