@@ -176,11 +176,12 @@ async function readFile(path) {
 function getChangedLines(isIgnored, pullRequestFiles) {
   return pullRequestFiles
     .map(file =>
-      isIgnored(file.filename) && (!file.previous_filename || isIgnored(file.previous_filename))
+      isIgnored(file.filename) &&
+      (!file.previous_filename || isIgnored(file.previous_filename))
         ? 0
         : file.changes
     )
-    .reduce((total, current) => total + current);
+    .reduce((total, current) => total + current, 0);
 }
 
 function getSizeLabel(changedLines, sizes = defaultSizes) {
