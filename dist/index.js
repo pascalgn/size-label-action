@@ -141,7 +141,7 @@ function debug(...str) {
 }
 
 function parseIgnored(str = "") {
-  const ignored = str
+  const ignored = (str || "")
     .split(/\r|\n/)
     .map(s => s.trim())
     .filter(s => s.length > 0 && !s.startsWith("#"))
@@ -154,14 +154,13 @@ function parseIgnored(str = "") {
     if (path == null || path === "/dev/null") {
       return true;
     }
-    const pathname = path.slice(2);
     let ignore = false;
     for (const entry of ignored) {
       if (entry.not) {
-        if (pathname.match(entry.not.regex)) {
+        if (path.match(entry.not.regex)) {
           return false;
         }
-      } else if (!ignore && pathname.match(entry.regex)) {
+      } else if (!ignore && path.match(entry.regex)) {
         ignore = true;
       }
     }
@@ -184,12 +183,7 @@ async function readFile(path) {
 
 function getChangedLines(isIgnored, pullRequestFiles) {
   return pullRequestFiles
-    .map(file =>
-      isIgnored(file.filename) &&
-      (!file.previous_filename || isIgnored(file.previous_filename))
-        ? 0
-        : file.changes
-    )
+    .map(file => isIgnored(file.previous_filename) && isIgnored(file.filename) ? 0 : file.changes)
     .reduce((total, current) => total + current, 0);
 }
 
@@ -238,7 +232,7 @@ if (require.main === require.cache[eval('__filename')]) {
   );
 }
 
-module.exports = { main };
+module.exports = { main, parseIgnored }; // parseIgnored exported for testing
 
 
 /***/ }),
