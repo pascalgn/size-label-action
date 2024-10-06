@@ -8,9 +8,6 @@ describe("parseIgnored", () => {
 
         // then
         expect(isIgnored("file")).toBe(false);
-        // always ignored
-        expect(isIgnored(null)).toBe(true);
-        expect(isIgnored("/dev/null")).toBe(true);
     });
 
     it("ignores ordinary patterns", () => {
@@ -21,6 +18,14 @@ describe("parseIgnored", () => {
         expect(isIgnored("file")).toBe(false);
         expect(isIgnored("src/test/file")).toBe(true);
         expect(isIgnored("codebase/src/testFixtures/file")).toBe(true);
+    });
+
+    it.each([null, undefined, "/dev/null"])("ignores some patterns by default (%s)", (alwaysIgnoredInput) => {
+        // when
+        const isIgnored = parseIgnored("**/src/integration/**\n**/src/test/**\n**/src/testFixtures/**");
+
+        // then
+        expect(isIgnored(alwaysIgnoredInput)).toBe(true);
     });
 
     it("accepts negated patterns", () => {
