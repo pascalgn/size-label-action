@@ -10,7 +10,7 @@
     "size-label-action": "index.js"
   },
   "scripts": {
-    "test": "yarn compile && node test.js",
+    "test": "vitest run && yarn compile && node test.js",
     "lint": "eslint .",
     "compile": "ncc build index.js --license LICENSE -o dist",
     "prepublish": "yarn compile"
@@ -24,7 +24,8 @@
     "@vercel/ncc": "^0.36.1",
     "dotenv": "^16.1.2",
     "eslint": "^8.41.0",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "vitest": "^2.1.2"
   },
   "prettier": {
     "arrowParens": "avoid",
