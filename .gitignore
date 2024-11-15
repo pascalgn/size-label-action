@@ -2,5 +2,6 @@
 !.dockerignore
 !.eslintrc.json
 !.gitignore
+!.github
 
 node_modules/
