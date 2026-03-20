@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const process = require("process");
+import { writeFileSync, readFile } from "fs";
+import process, { env } from "process";
+import url from "url";
 
-const { Octokit } = require("@octokit/rest");
-const globrex = require("globrex");
+import { Octokit } from "@octokit/rest";
+import globrex from "globrex";
 
-const HttpsProxyAgent = require("https-proxy-agent");
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 const defaultSizes = {
   0: "XS",
@@ -21,20 +22,20 @@ const actions = ["opened", "synchronize", "reopened"];
 
 const globrexOptions = { extended: true, globstar: true };
 
-async function main() {
+export async function main() {
   debug("Running size-label-action...");
 
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const GITHUB_TOKEN = env.GITHUB_TOKEN;
   if (!GITHUB_TOKEN) {
     throw new Error("Environment variable GITHUB_TOKEN not set!");
   }
 
-  const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
+  const GITHUB_EVENT_PATH = env.GITHUB_EVENT_PATH;
   if (!GITHUB_EVENT_PATH) {
     throw new Error("Environment variable GITHUB_EVENT_PATH not set!");
   }
 
-  const eventDataStr = await readFile(GITHUB_EVENT_PATH);
+  const eventDataStr = await readEventFile(GITHUB_EVENT_PATH);
   const eventData = JSON.parse(eventDataStr);
 
   if (!eventData || !eventData.pull_request || !eventData.pull_request.base) {
@@ -48,7 +49,7 @@ async function main() {
     return false;
   }
 
-  const isIgnored = parseIgnored(process.env.IGNORED);
+  const isIgnored = parseIgnored(env.IGNORED);
 
   const pullRequestHome = {
     owner: eventData.pull_request.base.repo.owner.login,
@@ -57,11 +58,11 @@ async function main() {
 
   const pull_number = eventData.pull_request.number;
 
-  const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy;
+  const proxyUrl = env.HTTPS_PROXY || env.https_proxy;
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
-    baseUrl: process.env.GITHUB_API_URL || "https://api.github.com",
+    baseUrl: env.GITHUB_API_URL || "https://api.github.com",
     userAgent: "pascalgn/size-label-action",
     ...(proxyUrl && { request: { agent: new HttpsProxyAgent(proxyUrl) } })
   });
@@ -85,9 +86,9 @@ async function main() {
   const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
 
-  const githubOutput = process.env.GITHUB_OUTPUT;
+  const githubOutput = env.GITHUB_OUTPUT;
   if (githubOutput) {
-    fs.writeFileSync(githubOutput, `sizeLabel="${sizeLabel}"`);
+    writeFileSync(githubOutput, `sizeLabel="${sizeLabel}"`);
     debug(`Written label '${sizeLabel}' to ${githubOutput}`);
   }
 
@@ -129,12 +130,13 @@ async function main() {
 }
 
 function debug(...str) {
-  if (process.env.DEBUG_ACTION) {
+  if (env.DEBUG_ACTION) {
     console.log.apply(console, str);
   }
 }
 
-function parseIgnored(str = "") {
+// exported for testing
+export function parseIgnored(str = "") {
   const ignored = (str || "")
     .split(/\r|\n/)
     .map(s => s.trim())
@@ -163,9 +165,9 @@ function parseIgnored(str = "") {
   return isIgnored;
 }
 
-async function readFile(path) {
+async function readEventFile(path) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, { encoding: "utf8" }, (err, data) => {
+    readFile(path, { encoding: "utf8" }, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -177,7 +179,11 @@ async function readFile(path) {
 
 function getChangedLines(isIgnored, pullRequestFiles) {
   return pullRequestFiles
-    .map(file => isIgnored(file.previous_filename) && isIgnored(file.filename) ? 0 : file.changes)
+    .map(file =>
+      isIgnored(file.previous_filename) && isIgnored(file.filename)
+        ? 0
+        : file.changes
+    )
     .reduce((total, current) => total + current, 0);
 }
 
@@ -208,7 +214,7 @@ function getLabelChanges(newLabel, existingLabels) {
 }
 
 function getSizesInput() {
-  let inputSizes = process.env.INPUT_SIZES;
+  let inputSizes = env.INPUT_SIZES;
   if (inputSizes && inputSizes.length) {
     return JSON.parse(inputSizes);
   } else {
@@ -216,7 +222,7 @@ function getSizesInput() {
   }
 }
 
-if (require.main === module) {
+if (url.fileURLToPath(import.meta.url) === process.argv[1]) {
   main().then(
     () => (process.exitCode = 0),
     e => {
@@ -225,5 +231,3 @@ if (require.main === module) {
     }
   );
 }
-
-module.exports = { main, parseIgnored }; // parseIgnored exported for testing

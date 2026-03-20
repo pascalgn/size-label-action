@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "GitHub action to assign labels based on pull request change sizes",
   "main": "index.js",
+  "type": "module",
   "author": "Pascal",
   "license": "MIT",
   "private": true,
@@ -16,16 +17,16 @@
     "prepublish": "yarn compile"
   },
   "dependencies": {
-    "@octokit/rest": "^19.0.11",
+    "@octokit/rest": "^22.0.1",
     "globrex": "^0.1.2",
-    "https-proxy-agent": "^7.0.5"
+    "https-proxy-agent": "^8.0.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.36.1",
-    "dotenv": "^16.1.2",
-    "eslint": "^8.41.0",
-    "tmp": "^0.2.1",
-    "vitest": "^2.1.3"
+    "@vercel/ncc": "^0.38.4",
+    "dotenv": "^17.3.1",
+    "eslint": "^10.0.3",
+    "tmp": "^0.2.5",
+    "vitest": "^4.1.0"
   },
   "prettier": {
     "arrowParens": "avoid",
